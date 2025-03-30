@@ -32,7 +32,8 @@ def obtener_anuncios_aprobados():
         return jsonify(anuncios), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
+    
+    
 
 @app.route('/api/anuncios', methods=['POST'])
 def crear_anuncio():
@@ -42,7 +43,12 @@ def crear_anuncio():
         descripcion = data.get('descripcion')
         categoria = data.get('categoria')
         localidad = data.get('localidad')
-        imagenUrl = data.get('imagenUrl')  # debe venir como string (URL)
+        imagenUrl = data.get('imagenUrl')
+        precio = data.get('precio')
+        whatsapp = data.get('whatsapp')
+        telefono = data.get('telefono')
+        url = data.get('url')
+        plan = data.get('plan')
 
         if not all([titulo, descripcion, categoria, localidad, imagenUrl]):
             return jsonify({'error': 'Faltan datos obligatorios'}), 400
@@ -51,9 +57,10 @@ def crear_anuncio():
         cursor = conn.cursor()
 
         cursor.execute("""
-            INSERT INTO anuncios (titulo, descripcion, categoria, localidad, imagenUrl, estado)
-            VALUES (%s, %s, %s, %s, %s, 'pending')
-        """, (titulo, descripcion, categoria, localidad, imagenUrl))
+            INSERT INTO anuncios 
+            (titulo, descripcion, categoria, localidad, imagenUrl, precio, whatsapp, telefono, url, plan, estado)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'pending')
+        """, (titulo, descripcion, categoria, localidad, imagenUrl, precio, whatsapp, telefono, url, plan))
 
         conn.commit()
         cursor.close()
